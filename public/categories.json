@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Услуги",
+    "image": "https://categories.olxcdn.com/assets/categories/olxkz/uslugi-7-1x.png"
+  },
+  {
+    "id": 2,
+    "name": "Строительство и ремонт",
+    "image": "https://categories.olxcdn.com/assets/categories/olxkz/stroitelstvo-remont-2574-1x.png"
+  },
+  {
+    "id": 3,
+    "name": "Аренда и прокат товаров",
+    "image": "https://categories.olxcdn.com/assets/categories/olxkz/prokat-tovarov-3006-1x.png"
+  },
+  {
+    "id": 4,
+    "name": "Недвижимость",
+    "image": "https://categories.olxcdn.com/assets/categories/olxkz/nedvizhimost-1-1x.png"
+  }
+]
