@@ -1,13 +1,15 @@
 "use client";
 import axios from "axios";
 import {
+  useQuery,
   QueryClient,
   QueryClientProvider,
   useMutation,
   useQueryClient,
+  Mutation,
 } from "react-query";
 import Advertisements from "./advertisements";
-
+const queryClient = new QueryClient();
 function useUploadImage() {
   return useMutation(async (file: any) => {
     const formData = new FormData();
@@ -22,31 +24,26 @@ function useUploadImage() {
         },
       }
     );
-    console.log(response.data.location);
 
     return response.data.location;
   });
 }
 
 async function createProduct(data: any) {
-  return axios.post("https://fakestoreapi.com/products", data);
+  const res = await axios.post("https://fakestoreapi.com/products", data);
+  return res.data;
 }
 
 export default function CreateProduct() {
   const queryClient = useQueryClient();
   const uploadImageMutation = useUploadImage();
-  const createProductMutation = useMutation(createProduct, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("products");
-    },
-  });
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const fields = Object.fromEntries(formData.entries());
-
     const imageFile = formData.get("image");
+
     if (imageFile && imageFile.name) {
       try {
         const imageUrl = await uploadImageMutation.mutateAsync(imageFile);
@@ -57,7 +54,9 @@ export default function CreateProduct() {
       }
     }
     console.log(fields);
-    createProductMutation.mutate(fields);
+    const mutation = useMutation((newProduct) => createProduct(newProduct), {
+      onSuccess: () => queryClient.invalidateQueries(["products"]),
+    });
     event.target.reset();
   };
 

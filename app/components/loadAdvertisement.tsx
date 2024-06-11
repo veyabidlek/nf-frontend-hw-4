@@ -11,7 +11,7 @@ async function fetchProducts() {
 }
 
 function LoadAdvertisements() {
-  const { data, isLoading, error } = useQuery("products", fetchProducts, {
+  const { data, isLoading, error } = useQuery(["products"], fetchProducts, {
     keepPreviousData: true,
   });
 
@@ -22,9 +22,5 @@ function LoadAdvertisements() {
 }
 
 export default function LoadAdvertisement() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <LoadAdvertisements />
-    </QueryClientProvider>
-  );
+  return <LoadAdvertisements />;
 }

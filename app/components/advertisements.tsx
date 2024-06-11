@@ -16,7 +16,7 @@ export default function Advertisements({ data }: AdvertisementsProps) {
       <h1 className="text-center font-bold text-3xl">Наши объявления</h1>
       <div className="max-w-screen-xl mx-auto px-4 md:px-8">
         <ul className="grid gap-x-8 gap-y-10 mt-16 sm:grid-cols-2 lg:grid-cols-4">
-          {data.map((item) => (
+          {data.map((item: any) => (
             <li
               className="w-full mx-auto group sm:max-w-sm rounded-md shadow-md bg-white"
               key={item.id}
