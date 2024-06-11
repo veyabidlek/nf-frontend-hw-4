@@ -1,15 +1,13 @@
 "use client";
 import axios from "axios";
 import {
-  useQuery,
   QueryClient,
   QueryClientProvider,
   useMutation,
   useQueryClient,
-  Mutation,
 } from "react-query";
 import Advertisements from "./advertisements";
-const queryClient = new QueryClient();
+
 function useUploadImage() {
   return useMutation(async (file: any) => {
     const formData = new FormData();
@@ -30,33 +28,40 @@ function useUploadImage() {
 }
 
 async function createProduct(data: any) {
-  const res = await axios.post("https://fakestoreapi.com/products", data);
-  return res.data;
+  const response = await axios.post("https://fakestoreapi.com/products", data);
+  return response.data;
 }
 
 export default function CreateProduct() {
   const queryClient = useQueryClient();
   const uploadImageMutation = useUploadImage();
+  const createProductMutation = useMutation(createProduct, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("products");
+    },
+  });
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const fields = Object.fromEntries(formData.entries());
+    const fields = Object.fromEntries(formData);
     const imageFile = formData.get("image");
-
     if (imageFile && imageFile.name) {
       try {
         const imageUrl = await uploadImageMutation.mutateAsync(imageFile);
+        console.log(imageUrl);
         fields.image = imageUrl;
       } catch (error) {
         console.error("Image upload failed", error);
         return;
       }
     }
-    console.log(fields);
-    const mutation = useMutation((newProduct) => createProduct(newProduct), {
-      onSuccess: () => queryClient.invalidateQueries(["products"]),
-    });
+    try {
+      await createProductMutation.mutateAsync(fields);
+    } catch (error) {
+      console.error("Product creation failed", error);
+    }
+
     event.target.reset();
   };
 

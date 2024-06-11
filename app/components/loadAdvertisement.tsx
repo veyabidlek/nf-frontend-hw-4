@@ -2,6 +2,7 @@
 import axios from "axios";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import Advertisements from "./advertisements";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
@@ -11,9 +12,14 @@ async function fetchProducts() {
 }
 
 function LoadAdvertisements() {
-  const { data, isLoading, error } = useQuery(["products"], fetchProducts, {
+  const { data, isLoading, error } = useQuery("products", fetchProducts, {
     keepPreviousData: true,
   });
+
+  useEffect(() => {
+    console.log("data changed");
+    console.log(data);
+  }, [data]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {"ERROR!"}</div>;
